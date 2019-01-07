@@ -12,9 +12,6 @@ Contract should expose a public method for any user to grant permission to anoth
 Contract should expose a public method for any user to check if they have permission from any user. This will accept a public address parameter and return a true if user has permission. 
 The contract should be deployed to an Ethereum Rinkeby network.
 Happy for you to elaborate and modify the rules above with more detail if you wish as long as you have a valid reason.
-
-----
-New function been added to revoke permission from a user public address.
  **/
 
  
@@ -22,20 +19,39 @@ contract Shiv{
 
   mapping (address => mapping (address => bool)) private _allowed;
 
+  /**
+  * @dev Any user (calling this contract) to check if he has permission from another public address (user).
+  * @param user The address to query permission.
+  * @return Return true if found operation successful.
+   **/
+   
     function hasPermissionFrom( address user )    public    view    returns (bool)
   {
-    return _allowed[msg.sender][user] ;
+      require(_allowed[user][msg.sender] );
+      
+    return _allowed[user][msg.sender] ;
   }
 
-  
+
+  /**
+  * @dev Any user to grant permission to another public address. state :  _allowed[user1][user2]=true 
+  * @param user The address to grant Permission to.
+  * @return Return true if found operation successful.
+   **/
+   
   function grantPermissionTo(address user ) public returns (bool){
               require(user != address(0));
 
-    _allowed[user][msg.sender] = true;
+    _allowed[msg.sender][user] = true;
 
     return true;
       }
-     
+
+  /**
+  * @dev Any user to revoke permission from another public address. state :  _allowed[user1][user2]=false 
+  * @param user The address to revoke Permission
+  * @return Return true if found operation successful.
+   **/
   function revokePermissionFrom(address user ) public returns (bool){
               require(user != address(0));
 
@@ -45,3 +61,5 @@ contract Shiv{
       }
 
 }
+
+
