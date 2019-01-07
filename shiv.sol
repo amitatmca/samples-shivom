@@ -17,7 +17,7 @@ Happy for you to elaborate and modify the rules above with more detail if you wi
  
 contract Shiv{
 
-  mapping (address => mapping (address => bool)) private _allowed;
+  mapping (address => mapping (address => bool)) private allowed;
 
   /**
   * @dev Any user (calling this contract) to check if he has permission from another public address (user).
@@ -27,9 +27,9 @@ contract Shiv{
    
     function hasPermissionFrom( address user )    public    view    returns (bool)
   {
-      require(_allowed[user][msg.sender] );
+      require(user != address(0));
       
-    return _allowed[user][msg.sender] ;
+    return allowed[user][msg.sender] ;
   }
 
 
@@ -42,7 +42,7 @@ contract Shiv{
   function grantPermissionTo(address user ) public returns (bool){
               require(user != address(0));
 
-    _allowed[msg.sender][user] = true;
+   allowed[msg.sender][user] = true;
 
     return true;
       }
@@ -55,7 +55,7 @@ contract Shiv{
   function revokePermissionFrom(address user ) public returns (bool){
               require(user != address(0));
 
-    _allowed[msg.sender][user] = false;
+    allowed[msg.sender][user] = false;
 
     return true;
       }
